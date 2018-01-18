@@ -1,0 +1,7 @@
+lab3part2.sln
+
+lab3part2/Debug/*
+lab3part2/lab3part2.vcxproj
+lab3part2/lab3part2.vcxproj.filters
+Debug/*
+.vs/*
