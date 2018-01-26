@@ -46,7 +46,7 @@ void arrangement(char *strIn, int len, int lenMax)
 		if (is0x(strIn[i], strIn[i + 1]))
 		{
 			int j = 0;
-			for (int k = i + 2; is0x(strIn[k], strIn[k + 1]) == 0 && isHexNum(strIn[k]) == 1 && j < len; j++, k++)
+			for (int k = i + 2; !is0x(strIn[k], strIn[k + 1]) && isHexNum(strIn[k]) && j < len; j++, k++)
 				temp[j] = strIn[k];
 
 			temp[j] = '\0';
@@ -80,3 +80,26 @@ int main()
 	free(strIn);
 	return 0;
 }
+/*int main()
+{
+	char *so = "01789A";
+	char *temp = "cvvvv";
+	char c = (char)strtol(so, NULL, 16);
+
+
+	int t = strtol(so, NULL, 16);;
+	*temp = (char)strtol(so, NULL, 16);
+	printf("%d\n", temp);*/
+
+	/*
+char A[20] = { 0x11,0x15,0x32,0x16,0x44,0x1,0x6,0x8A };
+//char *p; int *q; long *l;
+//p = A; q = (int*)p;  l = (long*)p;
+//p[2] = 5;                        // записать 5 во второй байт области A
+//q[1] = 7;                        // записать 7 в первое слово области A
+
+for (int i = 0; i < 8; i++)
+	printf("0x%x ", A[i]);
+
+return 0;
+}*/
