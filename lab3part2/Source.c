@@ -36,35 +36,87 @@ bool is0x(char o, char x)
 	return (o == '0' && x == 'x');
 }
 
+void read(char *p)
+{
+	while ((*p != '\0') || (*(p + 1) != '\0'))
+	{
+		if (*p == '\0')
+		{
+			p++;
+			int *n = (int*)p;
+			printf("%d", *n);
+			n++;
+			p = (char*)n;
+		}
+		else
+		{
+			printf("%c", *p);
+			p++;
+		}
+	}
+	printf("\n");
+}
+
+void output(char *p)
+{
+	while ((*p != '\0') || (*(p + 1) != '\0'))
+	{
+		if (*p == '\0')
+		{
+			printf("'\\0', ");
+			p++;
+			int *n = (int*)p;
+			printf("'%d', ", *n);
+			n++;
+			p = (char*)n;
+		}
+		else
+		{
+			printf("'%c', ", *p);
+			p++;
+		}
+	}
+	printf("'\\0', '\\0' \n\n");
+}
+
 void arrangement(char *strIn, int len, int lenMax)
 {
-	char *strAr = (char*)malloc(len * sizeof(char));
+	char *strAr = (char*)malloc(1.5 * len * sizeof(char));
 	char *temp = (char*)malloc(len * sizeof(char));
 
-	for (int i = 0; i < len; i++)
+	int i = 0;
+	for (; i < len; i++)
 	{
 		if (is0x(strIn[i], strIn[i + 1]))
 		{
+			//strAr[i++] = '\0';
 			int j = 0;
 			for (int k = i + 2; !is0x(strIn[k], strIn[k + 1]) && isHexNum(strIn[k]) && j < len; j++, k++)
 				temp[j] = strIn[k];
 
 			temp[j] = '\0';
-			(int)strAr[i] = strtol(temp, NULL, 16);
-			printf("%x ", strAr[i]);
+
+			unsigned short t = strtol(temp, NULL, 16);
+			strAr[i] = (t >> 8) & 0xFF;
+			strAr[++i] = t & 0xFF;
+
+			printf("%x\n", strAr[i - 1]);
+			printf("%x\n", strAr[i]);
 
 		}
 		else
 			strAr[i] = strIn[i];
 	}
 
-	//for (int i = 0; i < len; i++)
-	//	printf("%c ", strAr[i]);
-	printf("\n");
+	//strAr[i++] = '\0';
+	//strAr[i] = '\0';
+
+	printf("%s\n", strAr);
+	//output(strAr);
+	//read(strAr);
 
 	free(temp);
 	free(strAr);
-
 }
 
 int main()
