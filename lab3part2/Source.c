@@ -44,7 +44,7 @@ void read(char *p)
 		{
 			p++;
 			int *n = (int*)p;
-			printf("%d", *n);
+			printf("%x", *n);
 			n++;
 			p = (char*)n;
 		}
@@ -63,20 +63,20 @@ void output(char *p)
 	{
 		if (*p == '\0')
 		{
-			printf("'\\0', ");
+			printf("'\\0' ");
 			p++;
 			int *n = (int*)p;
-			printf("'%d', ", *n);
+			printf("'%hx' ", *n);
 			n++;
 			p = (char*)n;
 		}
 		else
 		{
-			printf("'%c', ", *p);
+			printf("'%c' ", *p);
 			p++;
 		}
 	}
-	printf("'\\0', '\\0' \n\n");
+	printf("'\\0' '\\0' \n\n");
 }
 
 void arrangement(char *strIn, int len, int lenMax)
@@ -85,34 +85,31 @@ void arrangement(char *strIn, int len, int lenMax)
 	char *temp = (char*)malloc(len * sizeof(char));
 
 	int i = 0;
-	for (; i < len; i++)
+	for (unsigned short t = 0, l = 0; l < len; i++, l++)
 	{
-		if (is0x(strIn[i], strIn[i + 1]))
+		if (is0x(strIn[l], strIn[l + 1]))
 		{
-			//strAr[i++] = '\0';
+			strAr[i++] = '\0';
 			int j = 0;
-			for (int k = i + 2; !is0x(strIn[k], strIn[k + 1]) && isHexNum(strIn[k]) && j < len; j++, k++)
+			for (int k = l + 2; !is0x(strIn[k], strIn[k + 1]) && isHexNum(strIn[k]) && j < len; j++, k++)
 				temp[j] = strIn[k];
 
 			temp[j] = '\0';
 
-			unsigned short t = strtol(temp, NULL, 16);
-			strAr[i] = (t >> 8) & 0xFF;
-			strAr[++i] = t & 0xFF;
+			t = strtol(temp, NULL, 16);
+			strAr[i] =  t & 0xFF;
+			strAr[++i] = (t >> 8) & 0xFF;
 
-			printf("%x\n", strAr[i - 1]);
-			printf("%x\n", strAr[i]);
-
+			l = i + 1;
 		}
 		else
-			strAr[i] = strIn[i];
+			strAr[i] = strIn[l];
 	}
 
-	//strAr[i++] = '\0';
-	//strAr[i] = '\0';
+	strAr[i++] = '\0';
+	strAr[i] = '\0';
 
-	printf("%s\n", strAr);
-	//output(strAr);
+	output(strAr);
 	//read(strAr);
 
 	free(temp);
