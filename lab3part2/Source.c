@@ -79,9 +79,8 @@ void output(char *p)
 	printf("'\\0' '\\0' \n\n");
 }
 
-void arrangement(char *strIn, int len, int lenMax)
+char* arrangement(char *strIn, char *strAr, int len)
 {
-	char *strAr = (char*)malloc(1.5 * len * sizeof(char));
 	char *temp = (char*)malloc(len * sizeof(char));
 
 	int i = 0;
@@ -109,11 +108,10 @@ void arrangement(char *strIn, int len, int lenMax)
 	strAr[i++] = '\0';
 	strAr[i] = '\0';
 
-	output(strAr);
 	//read(strAr);
 
 	free(temp);
-	free(strAr);
+	return strAr;
 }
 
 int main()
@@ -121,11 +119,14 @@ int main()
 	int lenMax = 50;
 	int len = 0;
 	char *strIn = (char*)malloc(lenMax * sizeof(char));
-
 	input(strIn, &len, lenMax);
-	arrangement(strIn, len, lenMax);
+
+	char *strAr = (char*)malloc(1.5 * len * sizeof(char));
+	strAr = arrangement(strIn, strAr, len);
+	output(strAr);
 
 	_getch();
+	free(strAr);
 	free(strIn);
 	return 0;
 }
