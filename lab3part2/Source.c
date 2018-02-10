@@ -12,18 +12,20 @@
 предваренная символом \0. Конец строки - два подряд идущих символа \0. 
 -исходная строка: "aa0x24FFbbb0xAA65"
 -упакованная строка: 'a' 'a''\0' 0x24FF 'b' 'b' 'b' '\0' 0xAA65 '\0' '\0'  */
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
+//aa0x24FFbbb0xAA65
+//a0x2AAbab0xA6Fnhr
+
 void input(char *strIn, int *len, int lenMax)
 {
 	printf("Enter a string up to %d:\n\n", lenMax); 
-	fgets(strIn, lenMax, stdin);
-	//strIn = "aa0x24FFbbb0xAA65";
-	*len = strlen(strIn);
+	fgets(strIn, lenMax, stdin);	
+	*len = strlen(strIn) - 1;
 }
 
 bool isHexNum(char n)
@@ -57,7 +59,7 @@ void read(char *p)
 	printf("\n");
 }
 
-void output(char *p)
+void outputArr(char *p)
 {
 	while ((*p != '\0') || (*(p + 1) != '\0'))
 	{
@@ -88,7 +90,8 @@ char* arrangement(char *strIn, char *strAr, int len)
 	{
 		if (is0x(strIn[l], strIn[l + 1]))
 		{
-			strAr[i++] = '\0';
+			if(i > 0)
+				strAr[i++] = '\0';
 			int j = 0;
 			for (int k = l + 2; !is0x(strIn[k], strIn[k + 1]) && isHexNum(strIn[k]) && j < len; j++, k++)
 				temp[j] = strIn[k];
@@ -99,7 +102,7 @@ char* arrangement(char *strIn, char *strAr, int len)
 			strAr[i] =  t & 0xFF;
 			strAr[++i] = (t >> 8) & 0xFF;
 
-			l = i + 1;
+			l += strlen(temp) - 1;
 		}
 		else
 			strAr[i] = strIn[l];
@@ -108,10 +111,36 @@ char* arrangement(char *strIn, char *strAr, int len)
 	strAr[i++] = '\0';
 	strAr[i] = '\0';
 
-	//read(strAr);
 
 	free(temp);
 	return strAr;
+}
+
+char* backInStr(char *strAr, char *strB, int len)
+{
+	for (int i = 0, b = 0; i < len; i++, b++)
+	{
+		if (strAr[i] == '\0')
+		{
+			i++;
+			unsigned short t = 0;
+			t = strAr[i] & 0xFF;
+			t = (strAr[i + 1] >> 8) & 0xFF;
+
+			printf("here %x \n", t);
+			
+			char temp[4] = " ";
+			_itoa(t, temp, 16);
+			strB[b++] = '0';
+			strB[b++] = 'x';
+			for(int j = 0; j < strlen(temp); j++)
+				strB[b++] = temp[j];
+		}
+		else
+			strB[b] = strAr[i];
+	}
+
+	return strB;
 }
 
 int main()
@@ -121,12 +150,20 @@ int main()
 	char *strIn = (char*)malloc(lenMax * sizeof(char));
 	input(strIn, &len, lenMax);
 
-	char *strAr = (char*)malloc(1.5 * len * sizeof(char));
+	char *strAr = (char*)malloc(1.6 * len * sizeof(char));
 	strAr = arrangement(strIn, strAr, len);
-	output(strAr);
+	outputArr(strAr);
+
+	char *strBack = (char*)malloc(len * sizeof(char));
+	strBack = backInStr(strAr, strBack, len);
+	//read(strBack);
+	for (int i = 0; i < len; i++)
+		printf("%c ", strBack[i]);
+	printf("\n");
 
 	_getch();
 	free(strAr);
 	free(strIn);
+	free(strBack);
 	return 0;
 }
