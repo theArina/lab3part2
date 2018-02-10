@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-//aa0x24FFbbb0xAA65
+//aa0x24Fbbb0xAA65
 //a0x2AAbab0xA6Fnhr
 
 void input(char *strIn, int *len, int lenMax)
@@ -36,27 +36,6 @@ bool isHexNum(char n)
 bool is0x(char o, char x)
 {
 	return (o == '0' && x == 'x');
-}
-
-void read(char *p)
-{
-	while ((*p != '\0') || (*(p + 1) != '\0'))
-	{
-		if (*p == '\0')
-		{
-			p++;
-			int *n = (int*)p;
-			printf("%x", *n);
-			n++;
-			p = (char*)n;
-		}
-		else
-		{
-			printf("%c", *p);
-			p++;
-		}
-	}
-	printf("\n");
 }
 
 void outputArr(char *p)
@@ -118,26 +97,28 @@ char* arrangement(char *strIn, char *strAr, int len)
 
 char* backInStr(char *strAr, char *strB, int len)
 {
-	for (int i = 0, b = 0; i < len; i++, b++)
+	for (int i = 0, b = 0; i < len +2;  b++)
 	{
 		if (strAr[i] == '\0')
 		{
 			i++;
-			unsigned short t = 0;
-			t = strAr[i] & 0xFF;
-			t = (strAr[i + 1] >> 8) & 0xFF;
-
-			printf("here %x \n", t);
-			
-			char temp[4] = " ";
+			unsigned short t = strAr[i] | (strAr[i + 1] << 8);
+					
+			char temp[8] = " ";
 			_itoa(t, temp, 16);
 			strB[b++] = '0';
 			strB[b++] = 'x';
-			for(int j = 0; j < strlen(temp); j++)
+			for(int j = 0; j < strlen(temp); j++, i++)
 				strB[b++] = temp[j];
+			b--;
+			//i--;
 		}
 		else
+		{
 			strB[b] = strAr[i];
+			i++;
+		}
+			
 	}
 
 	return strB;
@@ -156,9 +137,9 @@ int main()
 
 	char *strBack = (char*)malloc(len * sizeof(char));
 	strBack = backInStr(strAr, strBack, len);
-	//read(strBack);
+
 	for (int i = 0; i < len; i++)
-		printf("%c ", strBack[i]);
+		printf("%c", strBack[i]);
 	printf("\n");
 
 	_getch();
