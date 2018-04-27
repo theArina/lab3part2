@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-//aa0x24Fbbb0xAA65
+//aa0x24FFbbb0xAA65
 //a0x2AAbab0xA6Fnhr
 
 void input(char *strIn, int *len, int lenMax)
@@ -97,13 +97,20 @@ char* arrangement(char *strIn, char *strAr, int len)
 
 char* backInStr(char *strAr, char *strB, int len)
 {
+	printf("bytes strAr: ");
+	for (int i = 0; i < len; i++)
+		printf("%02x ", strAr[i]);
+	printf("\n");
+
 	for (int i = 0, b = 0; i < len +2;  b++)
 	{
 		if (strAr[i] == '\0')
 		{
 			i++;
 			unsigned short t = strAr[i] | (strAr[i + 1] << 8);
-					
+				
+			printf("t: 0x%04x \n", t);
+
 			char temp[8] = " ";
 			_itoa(t, temp, 16);
 			strB[b++] = '0';
@@ -117,10 +124,8 @@ char* backInStr(char *strAr, char *strB, int len)
 		{
 			strB[b] = strAr[i];
 			i++;
-		}
-			
+		}			
 	}
-
 	return strB;
 }
 
@@ -131,9 +136,14 @@ int main()
 	char *strIn = (char*)malloc(lenMax * sizeof(char));
 	input(strIn, &len, lenMax);
 
-	char *strAr = (char*)malloc(1.6 * len * sizeof(char));
+	char *strAr = (char*)malloc(2 * len * sizeof(char));
 	strAr = arrangement(strIn, strAr, len);
 	outputArr(strAr);
+
+	printf("bytes strAr: ");
+	for (int i = 0; i < len; i++)
+		printf("%02x ", strAr[i]);
+	printf("\n");
 
 	char *strBack = (char*)malloc(len * sizeof(char));
 	strBack = backInStr(strAr, strBack, len);
